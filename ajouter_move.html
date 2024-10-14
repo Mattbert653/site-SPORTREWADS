@@ -1,129 +1,170 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">  <!-- Convention pour les accents -->
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter Move</title>  <!-- Titre -->
+    <title>Ajouter Move</title>
     <style>
         body {
-            background-color: rgb(248, 190, 114);  /* Couleur de fond de la page */
-            margin: 0;  /* Supprime les marges par défaut */
-            font-family: Arial, sans-serif;  /* Police */
-            display: flex;  /* Flexbox pour centrer le contenu */
-            flex-direction: column;  /* Aligne le contenu en colonne */
-            align-items: center;  /* Centre le contenu horizontalement */
-            justify-content: center;  /* Centre le contenu verticalement */
-            height: 100vh;  /* Prend toute la hauteur de la fenêtre */
-            color: white;  /* Couleur du texte */
-            text-align: center;  /* Centre le texte */
+            background-color: rgb(248, 190, 114); /* Couleur de fond de la page */
+            margin: 0; /* Supprime les marges par défaut */
+            font-family: Arial, sans-serif; /* Police */
+            display: flex; /* Flexbox pour centrer le contenu */
+            flex-direction: column; /* Aligne le contenu en colonne */
+            align-items: center; /* Centre le contenu horizontalement */
+            justify-content: center; /* Centre le contenu verticalement */
+            height: 100vh; /* Prend toute la hauteur de la fenêtre */
+            color: white; /* Couleur du texte */
+            text-align: center; /* Centre le texte */
+            position: relative; /* Position relative pour centrer les éléments */
         }
 
         h1 {
-            margin-bottom: 20px;  /* Espace en bas du titre */
-        }
-
-        /* Styles pour le bouton de capture de photo */
-        .photo-upload {
-            margin: 20px;  /* Espace autour du bouton */
-            padding: 15px 25px;  /* Espace à l'intérieur du bouton */
-            background-color: #ff6f00;  /* Couleur de fond du bouton */
-            border: none;  /* Supprime la bordure */
-            border-radius: 5px;  /* Bords arrondis */
-            color: white;  /* Couleur du texte */
-            font-size: 1.2em;  /* Taille du texte */
-            cursor: pointer;  /* Curseur de main sur survol */
-            transition: background-color 0.3s;  /* Transition pour l'effet de survol */
-        }
-
-        .photo-upload:hover {
-            background-color: #ff8f00;  /* Change la couleur au survol */
+            margin-bottom: 20px; /* Espace en bas du titre */
         }
 
         /* Styles pour le flux vidéo */
         video {
-            border: 2px solid white;  /* Bordure autour de la vidéo */
-            margin-bottom: 20px;  /* Espace en bas de la vidéo */
-            width: 100%;  /* Prend toute la largeur */
-            max-width: 400px;  /* Largeur maximale de la vidéo */
+            border: 2px solid white; /* Bordure autour de la vidéo */
+            margin-bottom: 20px; /* Espace en bas de la vidéo */
+            width: 100%; /* Prend toute la largeur */
+            height: 100%; /* Prend toute la hauteur */
+            position: absolute; /* Positionne la vidéo */
+            top: 0; /* Aligne en haut */
+            left: 0; /* Aligne à gauche */
+            object-fit: cover; /* Recouvre l'espace */
+            z-index: 1; /* Envoie la vidéo en arrière-plan */
+        }
+
+        /* Styles pour les éléments au-dessus de la vidéo */
+        .overlay {
+            position: relative; /* Position relative pour centrer les éléments */
+            z-index: 2; /* Positionne les éléments au-dessus de la vidéo */
+        }
+
+        /* Styles pour le bouton de capture de photo */
+        .photo-upload {
+            margin: 20px; /* Espace autour du bouton */
+            width: 40px; /* Largeur du bouton */
+            height: 40px; /* Hauteur du bouton */
+            background-color: white; /* Couleur de fond du bouton */
+            border: none; /* Supprime la bordure */
+            border-radius: 50%; /* Arrondi le bouton */
+            position: absolute; /* Positionne le bouton */
+            bottom: 20px; /* Positionne le bouton en bas */
+            left: 50%; /* Centre horizontalement */
+            transform: translateX(-50%); /* Ajuste le centrage */
+            cursor: pointer; /* Curseur de main sur survol */
+            z-index: 2; /* Positionne le bouton au-dessus de la vidéo */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Ajoute une ombre pour donner du relief */
         }
 
         /* Styles pour la photo prise */
         .photo-display {
-            margin: 20px;  /* Espace autour de la photo */
-            border: 2px solid white;  /* Bordure autour de la photo */
-            display: none;  /* Masquer par défaut */
+            margin: 20px; /* Espace autour de la photo */
+            border: 2px solid white; /* Bordure autour de la photo */
+            display: none; /* Masquer par défaut */
+            max-width: 100%; /* Limite la largeur maximale */
+            max-height: 80vh; /* Limite la hauteur maximale */
+            position: relative; /* Positionne la photo au-dessus de la vidéo */
+            z-index: 2; /* Positionne la photo au-dessus de la vidéo */
         }
 
         /* Styles pour le message de chargement */
         .loading {
-            display: none;  /* Masquer par défaut */
-            font-size: 2em;  /* Taille du texte */
-            margin: 20px;  /* Espace autour du message */
+            display: none; /* Masquer par défaut */
+            font-size: 2em; /* Taille du texte */
+            margin: 20px; /* Espace autour du message */
+            position: relative; /* Positionne le message au-dessus de la vidéo */
+            z-index: 2; /* Positionne le message au-dessus de la vidéo */
         }
 
         /* Styles pour le message de félicitations */
         .message {
-            font-size: 2em;  /* Taille du texte */
-            margin-top: 20px;  /* Espace au-dessus du message */
-            visibility: hidden;  /* Masquer le message au départ */
+            font-size: 2em; /* Taille du texte */
+            margin-top: 20px; /* Espace au-dessus du message */
+            visibility: hidden; /* Masquer le message au départ */
+            position: relative; /* Positionne le message au-dessus de la vidéo */
+            z-index: 2; /* Positionne le message au-dessus de la vidéo */
         }
 
         /* Styles pour la tirelire */
         .tirelire {
-            font-size: 3em;  /* Taille du texte de la tirelire */
-            margin-top: 20px;  /* Espace au-dessus de la tirelire */
-            visibility: hidden;  /* Masquer la tirelire au départ */
+            font-size: 3em; /* Taille du texte de la tirelire */
+            margin-top: 20px; /* Espace au-dessus de la tirelire */
+            visibility: hidden; /* Masquer la tirelire au départ */
+            position: relative; /* Positionne la tirelire au-dessus de la vidéo */
+            z-index: 2; /* Positionne la tirelire au-dessus de la vidéo */
         }
 
         /* Styles pour les boutons de confirmation */
-        .confirm-btn, .retry-btn {
-            margin: 10px;  /* Espace autour des boutons */
-            padding: 10px 20px;  /* Espace à l'intérieur des boutons */
-            background-color: #28a745;  /* Couleur de fond pour le bouton de confirmation */
-            border: none;  /* Supprime la bordure */
-            border-radius: 5px;  /* Bords arrondis */
-            color: white;  /* Couleur du texte */
-            font-size: 1.2em;  /* Taille du texte */
-            cursor: pointer;  /* Curseur de main sur survol */
-            transition: background-color 0.3s;  /* Transition pour l'effet de survol */
+        .confirm-btn, .retry-btn, .back-btn {
+            margin: 10px; /* Espace autour des boutons */
+            padding: 10px 20px; /* Espace à l'intérieur des boutons */
+            background-color: #28a745; /* Couleur de fond pour le bouton de confirmation */
+            border: none; /* Supprime la bordure */
+            border-radius: 5px; /* Bords arrondis */
+            color: white; /* Couleur du texte */
+            font-size: 1.2em; /* Taille du texte */
+            cursor: pointer; /* Curseur de main sur survol */
+            transition: background-color 0.3s; /* Transition pour l'effet de survol */
+            position: relative; /* Positionne les boutons au-dessus de la vidéo */
+            z-index: 2; /* Positionne les boutons au-dessus de la vidéo */
         }
 
-        .confirm-btn:hover {
-            background-color: #218838;  /* Change la couleur au survol */
+        .confirm-btn:hover, .back-btn:hover {
+            background-color: #218838; /* Change la couleur au survol */
         }
 
         .retry-btn {
-            background-color: #dc3545;  /* Couleur de fond pour le bouton de reprise */
+            background-color: #dc3545; /* Couleur de fond pour le bouton de reprise */
         }
 
         .retry-btn:hover {
-            background-color: #c82333;  /* Change la couleur au survol */
+            background-color: #c82333; /* Change la couleur au survol */
+        }
+
+        @media (max-width: 600px) {
+            /* Styles pour les petits écrans (smartphones) */
+            .photo-upload {
+                width: 80%; /* Largeur du bouton sur mobile */
+                height: 80%; /* Hauteur du bouton sur mobile */
+                font-size: 1em; /* Taille du texte sur mobile */
+            }
+
+            video {
+                max-height: 100%; /* Limite la hauteur de la vidéo sur mobile */
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1>Déposez votre Move</h1>
-    
     <video id="video" autoplay></video>
-    <button class="photo-upload" id="capture-btn">Capturer la photo</button>
-    
-    <canvas id="canvas" style="display: none;"></canvas>
-    <img id="photo-display" class="photo-display" alt="Photo capturée">
+    <div class="overlay">
+        <h1>Déposez votre Move</h1>
+        <button class="photo-upload" id="capture-btn"></button> <!-- Bouton circulaire sans texte -->
 
-    <!-- Message de chargement -->
-    <div class="loading" id="loading">Chargement...</div>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <img id="photo-display" class="photo-display" alt="Photo capturée">
 
-    <!-- Message de félicitations -->
-    <div class="message" id="message">Bravo ! À demain !</div>
-    <div class="tirelire" id="tirelire">💰 20 points</div>
+        <!-- Message de chargement -->
+        <div class="loading" id="loading">Chargement...</div>
 
-    <!-- Modal de confirmation -->
-    <div id="confirmation-modal" style="display: none;">
-        <h2>Confirmez votre photo</h2>
-        <button class="confirm-btn" id="confirm-btn">Confirmer</button>
-        <button class="retry-btn" id="retry-btn">Reprendre</button>
+        <!-- Message de félicitations -->
+        <div class="message" id="message">Bravo ! À demain !</div>
+        <div class="tirelire" id="tirelire">💰 20 points</div>
+
+        <!-- Modal de confirmation -->
+        <div id="confirmation-modal" style="display: none;">
+            <h2>Confirmez votre photo</h2>
+            <button class="confirm-btn" id="confirm-btn">Confirmer</button>
+            <button class="retry-btn" id="retry-btn">Reprendre</button>
+        </div>
+
+        <!-- Bouton de retour au menu -->
+        <button class="back-btn" id="back-btn" style="display: none;">Retour au menu</button>
     </div>
 
     <script>
@@ -132,72 +173,60 @@
         const loadingMessage = document.getElementById('loading');
         const message = document.getElementById('message');
         const tirelire = document.getElementById('tirelire');
-        const canvas = document.getElementById('canvas');
         const photoDisplay = document.getElementById('photo-display');
-
         const confirmationModal = document.getElementById('confirmation-modal');
         const confirmButton = document.getElementById('confirm-btn');
         const retryButton = document.getElementById('retry-btn');
+        const backButton = document.getElementById('back-btn');
 
-        // Demander l'accès à la caméra
+        // Accès à la caméra
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
-                video.srcObject = stream; // Affiche le flux vidéo sur la balise video
+                video.srcObject = stream;
             })
             .catch((error) => {
-                console.error('Erreur d\'accès à la caméra : ', error);
+                console.error("Erreur d'accès à la caméra:", error);
             });
 
-        // Fonction pour capturer la photo
         captureButton.addEventListener('click', () => {
-            // Définir la taille du canvas selon le flux vidéo
+            const canvas = document.getElementById('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0); // Dessine l'image du flux vidéo sur le canvas
-            
-            // Affiche la photo capturée
-            photoDisplay.src = canvas.toDataURL(); // Convertit le canvas en image
-            photoDisplay.style.display = 'block'; // Affiche la photo
-            
-            // Affiche le modal de confirmation
-            confirmationModal.style.display = 'flex';
-            confirmationModal.style.flexDirection = 'column';
-            confirmationModal.style.alignItems = 'center';
-            confirmationModal.style.justifyContent = 'center';
-            confirmationModal.style.color = 'white';
-            confirmationModal.style.marginTop = '20px';
-            
-            // Masquer le flux vidéo et le bouton de capture
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/png');
+            photoDisplay.src = dataURL;
+            photoDisplay.style.display = 'block';
+
+            // Masquer le flux vidéo
             video.style.display = 'none';
             captureButton.style.display = 'none';
+            confirmationModal.style.display = 'block';
         });
 
-        // Fonction pour confirmer l'envoi
         confirmButton.addEventListener('click', () => {
-            // Masquer le modal
-            confirmationModal.style.display = 'none';
-            // Afficher le message de chargement
             loadingMessage.style.display = 'block';
+            confirmationModal.style.display = 'none';
+            message.style.visibility = 'visible';
+            tirelire.style.visibility = 'visible';
+            loadingMessage.style.display = 'none';
 
-            // Animation de chargement
+            // Simule l'ajout de points à la tirelire
             setTimeout(() => {
-                loadingMessage.style.display = 'none'; // Masquer le message de chargement
-                photoDisplay.style.display = 'none'; // Masquer la photo
-                message.style.visibility = 'visible'; // Afficher le message
-                tirelire.style.visibility = 'visible'; // Afficher la tirelire
-            }, 3000); // Durée du chargement
+                message.innerText = "Bravo ! Votre photo a été ajoutée.";
+                backButton.style.display = 'block'; // Affiche le bouton de retour
+            }, 2000);
         });
 
-        // Fonction pour reprendre la photo
         retryButton.addEventListener('click', () => {
-            // Masquer le modal
-            confirmationModal.style.display = 'none';
-            // Réafficher le flux vidéo et le bouton
-            video.style.display = 'block';
-            captureButton.style.display = 'block';
-            // Masquer la photo capturée
             photoDisplay.style.display = 'none';
+            video.style.display = 'block'; // Affiche à nouveau le flux vidéo
+            captureButton.style.display = 'block'; // Affiche à nouveau le bouton
+            confirmationModal.style.display = 'none';
+        });
+
+        backButton.addEventListener('click', () => {
+            window.location.href = "index.html"; // Redirige vers l'index
         });
     </script>
 </body>
