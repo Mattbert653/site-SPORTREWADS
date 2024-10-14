@@ -12,19 +12,6 @@
             font-family: Arial, sans-serif;
         }
 
-        /* Score en haut à gauche */
-        .score {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: white;
-            color: black;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
         /* Styles pour le header */
         ul {
             list-style-type: none;
@@ -101,15 +88,32 @@
             transform: translate(-50%, -50%) translateY(-10px);
         }
 
+        /* Styles pour le bouton de connexion ou compte */
+        .account-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .account-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 
 <body>
-    <!-- Score affiché en haut à gauche -->
-    <div class="score">Score: <span id="score">0</span> points</div>
-
     <header>
         <h1 style="text-align:center;">Sports Rewards</h1>
+        <button class="account-button" id="account-button">Se connecter</button>
     </header>
 
     <section id="présentation">
@@ -132,12 +136,22 @@
     </section>
 
     <script>
-        // Récupération du score actuel depuis localStorage
-        let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score')) : 0;
+        // Récupération de l'utilisateur connecté
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-        // Affichage du score actuel
-        document.getElementById('score').innerText = score;
+        // Modifier le bouton de connexion si l'utilisateur est connecté
+        const accountButton = document.getElementById('account-button');
+
+        if (currentUser) {
+            accountButton.innerText = currentUser.username;
+            accountButton.onclick = () => {
+                window.location.href = "mon_compte.html";
+            };
+        } else {
+            accountButton.onclick = () => {
+                window.location.href = "login.html";
+            };
+        }
     </script>
-
 </body>
 </html>

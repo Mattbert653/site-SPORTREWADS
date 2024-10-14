@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Compte</title>
+    <style>
+        body {
+            background-color: rgb(255, 238, 193);
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: black;
+        }
+
+        .score-container {
+            text-align: center;
+            margin: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Mon Compte</h1>
+    <div class="score-container">
+        <h2>Votre score actuel :</h2>
+        <p id="score">0 points</p>
+    </div>
+    <button class="back-btn" onclick="window.location.href='index.html'">Retour au menu</button>
+
+    <script>
+        // Récupérer le score depuis localStorage et l'afficher
+        let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score')) : 0;
+        document.getElementById('score').innerText = score + " points";
+    </script>
+</body>
+</html>

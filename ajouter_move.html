@@ -37,7 +37,6 @@
             z-index: 2;
         }
 
-        /* Mise à jour du bouton de capture pour être un anneau */
         .photo-upload {
             width: 80px;
             height: 80px;
@@ -192,6 +191,7 @@
             loadingMessage.style.display = 'block';
             confirmationModal.style.display = 'none';
 
+            // Ajouter 20 points au score actuel dans localStorage
             let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score')) : 0;
             score += 20;
             localStorage.setItem('score', score);
@@ -219,4 +219,3 @@
     </script>
 </body>
 </html>
-
