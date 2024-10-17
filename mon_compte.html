@@ -2,9 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Compte</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
     <style>
         body {
             background-color: rgb(255, 238, 193);
@@ -43,27 +43,9 @@
         }
     </style>
 </head>
+
 <body>
-    <?php
-    session_start();
-    if (!isset($_SESSION['user_id'])) {
-        header("Location: login.html");
-        exit();
-    }
-
-    include 'db.php';
-
-    $user_id = $_SESSION['user_id'];
-    $sql = "SELECT pseudo, score FROM users WHERE id='$user_id'";
-    $result = $conn->query($sql);
-    $user = $result->fetch_assoc();
-    ?>
-
-    <div class="account-container">
-        <h2>Bienvenue, <?php echo $user['pseudo']; ?></h2>
-        <p>Votre score actuel : <?php echo $user['score']; ?> points</p>
-        <a href="index.html">Retour à l'accueil</a>
-        <a href="logout.php">Déconnexion</a>
-    </div>
-</body>
-</html>
+    <h1>Mon Compte</h1>
+    <div class="score-container">
+        <h2>Votre score actuel :</h2>
+        <p
