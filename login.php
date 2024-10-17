@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['pseudo'] = $user['pseudo'];
-            header("Location: mon_compte.html");
+            header("Location: mon_compte.php");
         } else {
             echo "Mot de passe incorrect.";
         }
