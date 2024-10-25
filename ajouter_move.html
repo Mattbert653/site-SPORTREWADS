@@ -7,7 +7,7 @@
     <title>Ajouter Move</title>
     <style>
         body {
-            background-color: rgb(248, 190, 114);
+            background-color: black;
             margin: 0;
             font-family: Arial, sans-serif;
             display: flex;
@@ -21,100 +21,49 @@
         }
 
         video {
-            border: 2px solid white;
-            margin-bottom: 20px;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
+            width: 90%;
+            height: auto;
+            max-width: 400px;
+            border: 8px solid white;
             object-fit: cover;
+            border-radius: 20px;
             z-index: 1;
         }
 
-        .overlay {
-            position: relative;
-            z-index: 2;
-        }
-
-        .photo-upload {
+        .capture-button {
             width: 80px;
             height: 80px;
-            background-color: transparent;
-            border: 8px solid white;
+            background-color: white;
             border-radius: 50%;
-            position: fixed;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
+            border: 4px solid black;
             cursor: pointer;
-            z-index: 2;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .photo-display {
-            margin: 20px;
-            border: 2px solid white;
-            display: none;
-            max-width: 100%;
-            max-height: 80vh;
-            position: relative;
-            z-index: 2;
-        }
-
-        .loading {
-            display: none;
-            font-size: 2em;
-            margin: 20px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .message {
-            font-size: 2em;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
             margin-top: 20px;
-            visibility: hidden;
-            position: relative;
-            z-index: 2;
         }
 
-        .tirelire {
-            font-size: 3em;
-            margin-top: 20px;
-            visibility: hidden;
-            position: relative;
-            z-index: 2;
+        .confirm-modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: black;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            text-align: center;
+            z-index: 4;
         }
 
-        .confirm-btn, .retry-btn, .back-btn {
+        .confirm-btn, .retry-btn, .redirect-btn {
             margin: 10px;
             padding: 10px 20px;
-            background-color: #28a745;
+            background-color: white;
             border: none;
             border-radius: 5px;
-            color: white;
-            font-size: 1.2em;
+            color: black;
+            font-size: 1em;
             cursor: pointer;
             transition: background-color 0.3s;
-            position: relative;
-            z-index: 2;
-        }
-
-        .confirm-btn:hover, .back-btn:hover {
-            background-color: #218838;
-        }
-
-        .retry-btn {
-            background-color: #dc3545;
-        }
-
-        .retry-btn:hover {
-            background-color: #c82333;
-        }
-
-        .back-btn {
-            display: block;
-            margin: 20px auto;
         }
 
         .bottom-nav {
@@ -128,6 +77,7 @@
             justify-content: space-around;
             align-items: center;
             border-top: 1px solid #ddd;
+            z-index: 3;
         }
 
         .bottom-nav img {
@@ -136,39 +86,20 @@
             cursor: pointer;
         }
 
-        @media (max-width: 600px) {
-            .photo-upload {
-                width: 70px;
-                height: 70px;
-                border: 6px solid white;
-            }
-
-            video {
-                max-height: 100%;
-            }
-        }
     </style>
 </head>
 
 <body>
     <video id="video" autoplay></video>
-    <div class="overlay">
-        <button class="photo-upload" id="capture-btn"></button>
+    <button class="capture-button" id="capture-btn"></button>
 
-        <canvas id="canvas" style="display: none;"></canvas>
-        <img id="photo-display" class="photo-display" alt="Photo capturée">
-
-        <div class="loading" id="loading">Chargement...</div>
-        <div class="message" id="message">Bravo ! À demain !</div>
-        <div class="tirelire" id="tirelire">💰 20 points</div>
-
-        <div id="confirmation-modal" style="display: none;">
-            <h2>Confirmez votre photo</h2>
+    <div class="confirm-modal" id="confirmation-modal">
+        <h2>Confirmez votre photo</h2>
+        <img id="photo-display" class="photo-display" alt="Photo capturée" style="max-width: 100%; height: auto;">
+        <div>
             <button class="confirm-btn" id="confirm-btn">Confirmer</button>
             <button class="retry-btn" id="retry-btn">Reprendre</button>
         </div>
-
-        <button class="back-btn" id="back-btn" style="display: none;">Retour au menu</button>
     </div>
 
     <div class="bottom-nav">
@@ -186,14 +117,10 @@
     <script>
         const video = document.getElementById('video');
         const captureButton = document.getElementById('capture-btn');
-        const loadingMessage = document.getElementById('loading');
-        const message = document.getElementById('message');
-        const tirelire = document.getElementById('tirelire');
-        const photoDisplay = document.getElementById('photo-display');
         const confirmationModal = document.getElementById('confirmation-modal');
+        const photoDisplay = document.getElementById('photo-display');
         const confirmButton = document.getElementById('confirm-btn');
         const retryButton = document.getElementById('retry-btn');
-        const backButton = document.getElementById('back-btn');
 
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
@@ -204,48 +131,40 @@
             });
 
         captureButton.addEventListener('click', () => {
-            const canvas = document.getElementById('canvas');
+            const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const dataURL = canvas.toDataURL('image/png');
             photoDisplay.src = dataURL;
-            photoDisplay.style.display = 'block';
-
-            video.style.display = 'none';
-            captureButton.style.display = 'none';
             confirmationModal.style.display = 'block';
+            video.style.display = 'none'; // Hide the video when photo is taken
         });
 
         confirmButton.addEventListener('click', () => {
-            loadingMessage.style.display = 'block';
             confirmationModal.style.display = 'none';
-
+            
             // Ajouter 20 points au score actuel dans localStorage
             let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score')) : 0;
             score += 20;
             localStorage.setItem('score', score);
 
-            message.style.visibility = 'visible';
-            tirelire.style.visibility = 'visible';
-            loadingMessage.style.display = 'none';
-
-            setTimeout(() => {
-                message.innerText = "Bravo ! Votre photo a été ajoutée.";
-                backButton.style.display = 'block';
-            }, 2000);
+            // Afficher un message de félicitation et bouton pour rediriger vers index.html
+            const redirectButton = document.createElement('button');
+            redirectButton.className = 'redirect-btn';
+            redirectButton.innerText = 'Retour à Mon Compte';
+            redirectButton.addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+            confirmationModal.innerHTML = '<h2>Bravo ! Vous avez gagné 20 points !</h2>';
+            confirmationModal.appendChild(redirectButton);
+            confirmationModal.style.display = 'block';
         });
 
         retryButton.addEventListener('click', () => {
-            photoDisplay.style.display = 'none';
-            video.style.display = 'block';
-            captureButton.style.display = 'block';
             confirmationModal.style.display = 'none';
-        });
-
-        backButton.addEventListener('click', () => {
-            window.location.href = "ajouter_move.html";
+            video.style.display = 'block'; // Show the video again to retake the photo
         });
     </script>
 </body>
