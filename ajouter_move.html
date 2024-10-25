@@ -114,7 +114,26 @@
 
         .back-btn {
             display: block;
-            margin: 20px auto; /* Centre horizontalement le bouton retour au menu */
+            margin: 20px auto;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #ddd;
+        }
+
+        .bottom-nav img {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
         }
 
         @media (max-width: 600px) {
@@ -150,6 +169,18 @@
         </div>
 
         <button class="back-btn" id="back-btn" style="display: none;">Retour au menu</button>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="boutique_recompenses.html">
+            <img src="shop_icon.png" alt="Boutique">
+        </a>
+        <a href="ajouter_move.html">
+            <img src="add_icon.png" alt="Ajouter Move">
+        </a>
+        <a href="index.html">
+            <img src="account_icon.png" alt="Compte">
+        </a>
     </div>
 
     <script>
@@ -214,7 +245,7 @@
         });
 
         backButton.addEventListener('click', () => {
-            window.location.href = "index.html";
+            window.location.href = "ajouter_move.html";
         });
     </script>
 </body>

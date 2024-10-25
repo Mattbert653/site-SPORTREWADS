@@ -4,140 +4,75 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SportRewards</title>
+    <title>Mon Compte</title>
     <style>
         body {
             background-color: rgb(255, 238, 193);
             margin: 0;
             font-family: Arial, sans-serif;
-        }
-
-        /* Score en haut à gauche */
-        .score {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: white;
-            color: black;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        /* Styles pour le header */
-        ul {
-            list-style-type: none;
-            padding: 0;
-            text-align: center;
-        }
-
-        ul li {
-            display: inline;
-            margin-right: 15px;
-        }
-
-        /* Section présentation */
-        #présentation {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
             height: 100vh;
-            align-items: center;  /* Centre horizontalement */
+            color: black;
         }
 
-        .texte-intro {
+        .score-container {
             text-align: center;
-            margin: 20px 0;
-            color: rgb(0, 0, 0);
-            font-size: 1.5em;
-            text-shadow: 2px 2px 4px rgba(127, 127, 127, 0.7);
+            margin: 20px;
         }
 
-        .imagesPrésentation {
-            display: flex;
-            flex-direction: column;
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            flex: 1;
-            align-items: center;  /* Centre les éléments enfants */
-        }
-
-        .image-item {
+            height: 60px;
+            background-color: white;
             display: flex;
-            justify-content: center;  /* Centre horizontalement */
-            align-items: center;  /* Centre verticalement */
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s;
-            margin: 10px;
-            width: 80%;  /* Fixe la largeur de l'élément */
-            height: 300px; /* Définir une hauteur fixe pour les images */
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #ddd;
         }
 
-        .image-item img {
-            width: 100%;  /* L'image occupe 100% de l'élément parent */
-            height: 100%; /* L'image prend la hauteur de l'élément */
-            object-fit: cover; /* Maintient le ratio d'aspect */
-            transition: transform 0.3s;
+        .bottom-nav img {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
         }
-
-        .image-item:hover img {
-            transform: scale(1.1);
-        }
-
-        .image-item h4 {
-            position: absolute;
-            color: white;
-            font-size: 2em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            transition: transform 0.3s;
-            z-index: 1;
-        }
-
-        .image-item:hover h4 {
-            transform: translate(-50%, -50%) translateY(-10px);
-        }
-
     </style>
 </head>
 
 <body>
-    <!-- Score affiché en haut à gauche -->
-    <div class="score">Score: <span id="score">0</span> points</div>
+    <h1>Mon Compte</h1>
+    <div class="score-container">
+        <h2>Votre score actuel :</h2>
+        <p><span id="score">0</span> points</p>
+    </div>
 
-    <header>
-        <h1 style="text-align:center;">Sports Rewards</h1>
-    </header>
-
-    <section id="présentation">
-        <div class="texte-intro">
-            <h2>Faites du sport, gagnez des récompenses !</h2>
-            <p>Participez à des activités sportives et collectez des points. Plus vous bougez, plus vous gagnez ! Échangez vos points contre des récompenses dans notre boutique.</p>
-        </div>
-
-        <div class="imagesPrésentation">
-            <div class="image-item">
-                <h4>Ajoute ton move</h4>
-                <a href="ajouter_move.html"><img src="move.jpeg" alt="Ajoute ton move"></a>
-            </div>
-
-            <div class="image-item">
-                <h4>Boutique des récompenses</h4>
-                <a href="boutique_recompenses.html"><img src="Cadeau.jpeg" alt="Boutique des récompenses"></a>
-            </div>
-        </div>
-    </section>
+    <div class="bottom-nav">
+        <a href="boutique_recompenses.html">
+            <img src="shop_icon.png" alt="Boutique">
+        </a>
+        <a href="ajouter_move.html">
+            <img src="add_icon.png" alt="Ajouter Move">
+        </a>
+        <a href="mon_compte.html">
+            <img src="account_icon.png" alt="Compte">
+        </a>
+    </div>
 
     <script>
-        // Récupération du score actuel depuis localStorage
-        let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score')) : 0;
-
-        // Affichage du score actuel
-        document.getElementById('score').innerText = score;
+        // JavaScript code for displaying the score
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser) {
+            document.getElementById('score').innerText = currentUser.score;
+        }
     </script>
-
 </body>
 </html>
