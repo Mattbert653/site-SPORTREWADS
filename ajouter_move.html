@@ -20,16 +20,6 @@
             position: relative;
         }
 
-        video {
-            width: 90%;
-            height: auto;
-            max-width: 400px;
-            border: 8px solid white;
-            object-fit: cover;
-            border-radius: 20px;
-            z-index: 1;
-        }
-
         .capture-button {
             width: 80px;
             height: 80px;
@@ -90,7 +80,6 @@
 </head>
 
 <body>
-    <video id="video" autoplay></video>
     <button class="capture-button" id="capture-btn"></button>
 
     <div class="confirm-modal" id="confirmation-modal">
@@ -115,17 +104,17 @@
     </div>
 
     <script>
-        const video = document.getElementById('video');
+        let stream;
         const captureButton = document.getElementById('capture-btn');
         const confirmationModal = document.getElementById('confirmation-modal');
         const photoDisplay = document.getElementById('photo-display');
         const confirmButton = document.getElementById('confirm-btn');
         const retryButton = document.getElementById('retry-btn');
 
-        // Accès à la caméra
+        // Préparer l'accès à la caméra sans afficher de flux en direct
         navigator.mediaDevices.getUserMedia({ video: true })
-            .then((stream) => {
-                video.srcObject = stream;
+            .then((mediaStream) => {
+                stream = mediaStream;
             })
             .catch((error) => {
                 console.error("Erreur d'accès à la caméra:", error);
@@ -133,22 +122,29 @@
 
         // Capture de la photo
         captureButton.addEventListener('click', () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const context = canvas.getContext('2d');
-            
-            // Capturer et dessiner l'image sur le canvas
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const dataURL = canvas.toDataURL('image/png');
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.play();
 
-            // Afficher la photo capturée dans la modal
-            photoDisplay.src = dataURL;
-            confirmationModal.style.display = 'block';
+            // Attendre que le flux vidéo soit prêt
+            video.addEventListener('loadeddata', () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const context = canvas.getContext('2d');
+                
+                // Dessiner l'image capturée sur le canvas
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const dataURL = canvas.toDataURL('image/png');
 
-            // Masquer le flux vidéo pour donner l'impression d'une photo prise
-            video.pause();
-            video.style.display = 'none'; // Masquer la vidéo
+                // Afficher la photo capturée dans la modal
+                photoDisplay.src = dataURL;
+                confirmationModal.style.display = 'block';
+
+                // Arrêter la vidéo pour économiser les ressources
+                video.pause();
+                video.srcObject = null;
+            });
         });
 
         // Confirmation de la photo
@@ -175,8 +171,6 @@
         // Reprise de la photo
         retryButton.addEventListener('click', () => {
             confirmationModal.style.display = 'none';
-            video.style.display = 'block'; // Afficher la vidéo
-            video.play(); // Reprendre le flux vidéo
         });
     </script>
 </body>
