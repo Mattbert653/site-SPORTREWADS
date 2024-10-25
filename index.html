@@ -10,21 +10,86 @@
             background-color: rgb(250, 250, 250);
             margin: 0;
             font-family: Arial, sans-serif;
+            color: black;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-photo {
+            width: 80px;
+            height: 80px;
+            background-color: #ccc;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        .score-section {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .bar-container {
+            position: relative;
+            width: 50px;
+            height: 200px;
+            background: linear-gradient(to top, #e0e0e0, #f8f8f8);
+            clip-path: polygon(20% 100%, 80% 100%, 100% 0%, 0% 0%);
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .bar-fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(to top, #f47c24, #ff9800, #fdd835, #4cc0a9, #34ebba, #009688);
+            transition: height 0.5s ease-in-out;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 30px 0 10px;
+        }
+
+        .gift-section, .discount-section, .earn-points-section {
+            display: flex;
+            gap: 20px;
+            overflow-x: scroll;
+        }
+
+        .gift-item, .discount-item, .earn-item {
+            width: 250px;
+            height: 250px;
+            aspect-ratio: 1 / 1;
+            background-color: #f0f0f0;
+            text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            color: black;
-        }
-
-        .score-container {
-            text-align: center;
-            margin: 20px;
-        }
-
-        h1 {
-            margin-bottom: 20px;
+            border: 1px solid #ccc;
         }
 
         .bottom-nav {
@@ -49,11 +114,97 @@
 </head>
 
 <body>
-    <h1>Mon Compte</h1>
-    <div class="score-container">
-        <h2>Votre score actuel :</h2>
-        <p><span id="score">0</span> points</p>
-    </div>
+    <header>
+        <div class="profile-section">
+            <div class="profile-photo"></div>
+            <div>
+                <h2>Nom d'Utilisateur</h2>
+            </div>
+        </div>
+        <div class="score-section">
+            <div class="score-label" id="score-label">0 points</div>
+            <div class="bar-container">
+                <div class="bar-fill" id="bar-fill"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="section-title">BOUTIQUE</div>
+        <div class="score-total" style="font-size: 18px; font-weight: bold; margin-bottom: 20px;">NOMBRE DE POINTS: <span id="total-points">0</span></div>
+        <div class="section-title">CADEAUX</div>
+        <div class="gift-section">
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+            <div class="gift-item">Photo du cadeau<br>x pts</div>
+        </div>
+
+        <div class="section-title">CARTES RÉDUCTIONS</div>
+        <div class="discount-section">
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+            <div class="discount-item">Photo</div>
+        </div>
+
+        <div class="section-title">GAGNEZ DES POINTS</div>
+        <div class="earn-points-section">
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+            <div class="earn-item">Texte</div>
+        </div>
+
+    </main>
 
     <div class="bottom-nav">
         <a href="boutique_recompenses.html">
@@ -70,9 +221,25 @@
     <script>
         // JavaScript code for displaying the score
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (currentUser) {
-            document.getElementById('score').innerText = currentUser.score;
+        let currentScore = currentUser ? currentUser.score : 0;
+
+        const scoreLabel = document.getElementById('score-label');
+        const barFill = document.getElementById('bar-fill');
+        const scoreSlider = document.getElementById('score-slider');
+
+        function updateScoreDisplay(score) {
+            scoreLabel.innerText = score + ' points';
+            barFill.style.height = Math.min(score / 100 * 200, 200) + 'px';
         }
+
+        // Initialize score display
+        updateScoreDisplay(currentScore);
+
+        // Update score based on slider input
+        scoreSlider.addEventListener('input', function () {
+            currentScore = parseInt(this.value);
+            updateScoreDisplay(currentScore);
+        });
     </script>
 </body>
 </html>
