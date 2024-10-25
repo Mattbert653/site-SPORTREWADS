@@ -20,6 +20,27 @@
             position: relative;
         }
 
+        .video-container {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            height: auto;
+            border: 8px solid white;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: black;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            z-index: 1;
+        }
+
         .capture-button {
             width: 80px;
             height: 80px;
@@ -29,6 +50,7 @@
             cursor: pointer;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
             margin-top: 20px;
+            z-index: 2;
         }
 
         .confirm-modal {
@@ -41,7 +63,7 @@
             border-radius: 10px;
             display: none;
             text-align: center;
-            z-index: 4;
+            z-index: 3;
         }
 
         .confirm-btn, .retry-btn, .redirect-btn {
@@ -67,7 +89,7 @@
             justify-content: space-around;
             align-items: center;
             border-top: 1px solid #ddd;
-            z-index: 3;
+            z-index: 2;
         }
 
         .bottom-nav img {
@@ -80,6 +102,9 @@
 </head>
 
 <body>
+    <div class="video-container">
+        <video id="video" autoplay muted playsinline></video>
+    </div>
     <button class="capture-button" id="capture-btn"></button>
 
     <div class="confirm-modal" id="confirmation-modal">
@@ -104,47 +129,37 @@
     </div>
 
     <script>
-        let stream;
+        const video = document.getElementById('video');
         const captureButton = document.getElementById('capture-btn');
         const confirmationModal = document.getElementById('confirmation-modal');
         const photoDisplay = document.getElementById('photo-display');
         const confirmButton = document.getElementById('confirm-btn');
         const retryButton = document.getElementById('retry-btn');
 
-        // Préparer l'accès à la caméra sans afficher de flux en direct
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then((mediaStream) => {
-                stream = mediaStream;
+        // Accès à la caméra et affichage dans le cadre
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then((stream) => {
+                video.srcObject = stream;
             })
             .catch((error) => {
                 console.error("Erreur d'accès à la caméra:", error);
             });
 
-        // Capture de la photo
+        // Capture de la photo au clic sur le bouton de capture
         captureButton.addEventListener('click', () => {
-            const video = document.createElement('video');
-            video.srcObject = stream;
-            video.play();
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            
+            // Capture et affichage dans la modal
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/png');
+            photoDisplay.src = dataURL;
+            confirmationModal.style.display = 'block';
 
-            // Attendre que le flux vidéo soit prêt
-            video.addEventListener('loadeddata', () => {
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                const context = canvas.getContext('2d');
-                
-                // Dessiner l'image capturée sur le canvas
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const dataURL = canvas.toDataURL('image/png');
-
-                // Afficher la photo capturée dans la modal
-                photoDisplay.src = dataURL;
-                confirmationModal.style.display = 'block';
-
-                // Arrêter la vidéo pour économiser les ressources
-                video.pause();
-                video.srcObject = null;
-            });
+            // Arrêter le flux vidéo en arrière-plan
+            video.pause();
         });
 
         // Confirmation de la photo
@@ -156,7 +171,7 @@
             score += 20;
             localStorage.setItem('score', score);
 
-            // Afficher le message de félicitation et bouton de redirection
+            // Message de félicitation et redirection
             const redirectButton = document.createElement('button');
             redirectButton.className = 'redirect-btn';
             redirectButton.innerText = 'Retour à Mon Compte';
@@ -171,6 +186,7 @@
         // Reprise de la photo
         retryButton.addEventListener('click', () => {
             confirmationModal.style.display = 'none';
+            video.play(); // Relancer la vidéo pour une nouvelle capture
         });
     </script>
 </body>
