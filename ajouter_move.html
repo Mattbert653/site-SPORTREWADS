@@ -122,6 +122,7 @@
         const confirmButton = document.getElementById('confirm-btn');
         const retryButton = document.getElementById('retry-btn');
 
+        // Accès à la caméra
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
                 video.srcObject = stream;
@@ -130,27 +131,36 @@
                 console.error("Erreur d'accès à la caméra:", error);
             });
 
+        // Capture de la photo
         captureButton.addEventListener('click', () => {
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             const context = canvas.getContext('2d');
+            
+            // Capturer et dessiner l'image sur le canvas
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const dataURL = canvas.toDataURL('image/png');
+
+            // Afficher la photo capturée dans la modal
             photoDisplay.src = dataURL;
             confirmationModal.style.display = 'block';
-            video.style.display = 'none'; // Hide the video when photo is taken
+
+            // Masquer le flux vidéo pour donner l'impression d'une photo prise
+            video.pause();
+            video.style.display = 'none'; // Masquer la vidéo
         });
 
+        // Confirmation de la photo
         confirmButton.addEventListener('click', () => {
             confirmationModal.style.display = 'none';
             
-            // Ajouter 20 points au score actuel dans localStorage
+            // Ajouter 20 points au score dans le localStorage
             let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score')) : 0;
             score += 20;
             localStorage.setItem('score', score);
 
-            // Afficher un message de félicitation et bouton pour rediriger vers index.html
+            // Afficher le message de félicitation et bouton de redirection
             const redirectButton = document.createElement('button');
             redirectButton.className = 'redirect-btn';
             redirectButton.innerText = 'Retour à Mon Compte';
@@ -162,9 +172,11 @@
             confirmationModal.style.display = 'block';
         });
 
+        // Reprise de la photo
         retryButton.addEventListener('click', () => {
             confirmationModal.style.display = 'none';
-            video.style.display = 'block'; // Show the video again to retake the photo
+            video.style.display = 'block'; // Afficher la vidéo
+            video.play(); // Reprendre le flux vidéo
         });
     </script>
 </body>
